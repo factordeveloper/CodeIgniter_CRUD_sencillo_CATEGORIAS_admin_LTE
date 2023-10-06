@@ -1,0 +1,203 @@
+<?= $this->extend('layouts/template')  ?>
+
+<?= $this->section('contenido')  ?>
+
+ <!-- add new post modal start -->
+ <div class="modal fade" id="modal_agregar_categoria" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Crear Categoría</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="#" method="POST" id="form_agregar_categoria" novalidate>
+          <div class="modal-body p-5">
+            <div class="mb-3">
+              <label>Nombre Categoría</label>
+              <input type="text" name="nombre_categoria" class="form-control" placeholder="Ingresa Categoría" required>
+              <div class="invalid-feedback">El nombre Categoria es requerido!</div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-success" id="boton_agregar_categoria">Crear Categoría</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- add new post modal end -->
+
+
+  <div class="container p-1">
+    <div class="row my-4">
+      <div class="col-12">
+       
+        
+            <div class="text-secondary fw-bold fs-3">Lista de Categorías</div>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal_agregar_categoria">Agregar Nueva Categoría</button>
+          </div>
+          <table class="table-bordered mt-3">
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Fecha Creación</th>
+    <th>Editar</th>
+    <th>Eliminar</th> 
+    <tbody id="mostrar_categorias">
+   
+    <tr>
+        <td>
+            <h1>Cargando Categorías.....</h1>
+        </td>
+    </tr>
+            
+    </tbody>
+
+  </table>
+         
+            
+      
+        </div>
+      </div>
+   
+
+
+
+
+
+
+
+  <script>
+    $(function() {
+      // add new post ajax request
+      $("#add_post_form").submit(function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        if (!this.checkValidity()) {
+          e.preventDefault();
+          $(this).addClass('was-validated');
+        } else {
+          $("#boton_agregar_categoria").text("Agregando...");
+          $.ajax({
+            url: '<?= base_url('categoria/agregar') ?>',
+            method: 'post',
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            dataType: 'json',
+            success: function(response) {
+                $("#modal_agregar_categoria").modal('hide');
+                $("#form_agregar_categoria")[0].reset();
+                $("#form_agregar_categoria").removeClass('was-validated');
+                Swal.fire(
+                  'Added',
+                  response.message,
+                  'success'
+                );
+                fetchAllPosts();
+              
+              $("#boton_agregar_categoria").text("Agregando...");
+            }
+          });
+        }
+      });
+
+      // edit post ajax request
+      $(document).delegate('.post_edit_btn', 'click', function(e) {
+        e.preventDefault();
+        const id = $(this).attr('id');
+        $.ajax({
+          url: '<?= base_url('categoria/editar/') ?>/' + id,
+          method: 'get',
+          success: function(response) {
+            $("#pid").val(response.message.id);
+          
+            $("#nombre_categoria").val(response.message.nombre_categoria);
+          }
+        });
+      });
+
+      // update post ajax request
+      $("#edit_post_form").submit(function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        if (!this.checkValidity()) {
+          e.preventDefault();
+          $(this).addClass('was-validated');
+        } else {
+          $("#edit_post_btn").text("Updating...");
+          $.ajax({
+            url: '<?= base_url('categoria/actualizar') ?>',
+            method: 'post',
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            dataType: 'json',
+            success: function(response) {
+              $("#edit_post_modal").modal('hide');
+              Swal.fire(
+                'Updated',
+                response.message,
+                'success'
+              );
+              fetchAllPosts();
+              $("#edit_post_btn").text("Update Post");
+            }
+          });
+        }
+      });
+
+      // delete post ajax request
+      $(document).delegate('.post_delete_btn', 'click', function(e) {
+        e.preventDefault();
+        const id = $(this).attr('id');
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url: '<?= base_url('categoria/eliminar/') ?>/' + id,
+              method: 'get',
+              success: function(response) {
+                Swal.fire(
+                  'Deleted!',
+                  response.message,
+                  'success'
+                )
+                fetchAllPosts();
+              }
+            });
+          }
+        })
+      });
+
+
+
+
+      // Mostrar Listado de Categorias
+      fetchAllPosts();
+
+      function fetchAllPosts() {
+        $.ajax({
+          url: '<?= base_url('categoria/mostrar') ?>',
+          method: 'get',
+          success: function(response) {
+            $("#mostrar_categorias").html(response.message);
+          }
+        });
+      }
+    });
+  </script>
+
+
+
+<?= $this->endSection()  ?>
