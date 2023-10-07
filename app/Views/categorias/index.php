@@ -30,6 +30,46 @@
   <!-- add new post modal end -->
 
 
+
+
+
+
+    <!-- edit post modal start -->
+    <div class="modal fade" id="modal_editar_categoria" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Editar Categoria</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="#" method="POST"  id="form_editar_categoria" novalidate>
+          <input type="hidden" name="id" id="pid">
+          <div class="modal-body p-5">
+            <div class="mb-3">
+
+              <label>Categoria</label>
+              <input type="text" name="nombre_categoria" id="nombre_categoria" class="form-control" required>
+              <div class="invalid-feedback">Categoría es obligatoria</div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-success" id="boton_editar_categoria">Actualizar Categoría</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- edit post modal end -->
+
+
+
+
+
+
+
+
   <div class="container p-1">
     <div class="row my-4">
       <div class="col-12">
@@ -71,7 +111,7 @@
   <script>
     $(function() {
       // add new post ajax request
-      $("#add_post_form").submit(function(e) {
+      $("#form_agregar_categoria").submit(function(e) {
         e.preventDefault();
         const formData = new FormData(this);
         if (!this.checkValidity()) {
@@ -92,7 +132,7 @@
                 $("#form_agregar_categoria")[0].reset();
                 $("#form_agregar_categoria").removeClass('was-validated');
                 Swal.fire(
-                  'Added',
+                  'Agregada !',
                   response.message,
                   'success'
                 );
@@ -104,8 +144,8 @@
         }
       });
 
-      // edit post ajax request
-      $(document).delegate('.post_edit_btn', 'click', function(e) {
+      // Editar Categoria
+      $(document).delegate('.boton_editar_categoria', 'click', function(e) {
         e.preventDefault();
         const id = $(this).attr('id');
         $.ajax({
@@ -119,15 +159,15 @@
         });
       });
 
-      // update post ajax request
-      $("#edit_post_form").submit(function(e) {
+      // Actualizar Categoria
+      $("#form_editar_categoria").submit(function(e) {
         e.preventDefault();
         const formData = new FormData(this);
         if (!this.checkValidity()) {
           e.preventDefault();
           $(this).addClass('was-validated');
         } else {
-          $("#edit_post_btn").text("Updating...");
+          $("#boton_editar_categoria").text("Actualizando...");
           $.ajax({
             url: '<?= base_url('categoria/actualizar') ?>',
             method: 'post',
@@ -137,14 +177,14 @@
             processData: false,
             dataType: 'json',
             success: function(response) {
-              $("#edit_post_modal").modal('hide');
+              $("#modal_editar_categoria").modal('hide');
               Swal.fire(
-                'Updated',
-                response.message,
+                'Actualizado !!!',
+                 response.message,
                 'success'
               );
               fetchAllPosts();
-              $("#edit_post_btn").text("Update Post");
+              $("boton_#editar_categoria").text("Update Post");
             }
           });
         }
@@ -155,13 +195,15 @@
         e.preventDefault();
         const id = $(this).attr('id');
         Swal.fire({
-          title: 'Are you sure?',
-          text: "You won't be able to revert this!",
+          title: 'Seguro que deseas borrar esto?',
+          text: "Esta acción es irreversible!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
+          confirmButtonText: 'Sí, Borralo!',
+          cancelButtonText: 'cancelar'
+          
         }).then((result) => {
           if (result.isConfirmed) {
             $.ajax({
@@ -169,7 +211,7 @@
               method: 'get',
               success: function(response) {
                 Swal.fire(
-                  'Deleted!',
+                  'Eliminado!',
                   response.message,
                   'success'
                 )

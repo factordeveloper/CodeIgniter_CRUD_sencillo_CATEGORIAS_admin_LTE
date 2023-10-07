@@ -36,10 +36,10 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="<?= base_url().route_to('categorias_index') ?>" class="nav-link">Home</a>
+        <a href="<?= base_url().route_to('categorias_index') ?>" class="nav-link">Ventas</a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="<?= base_url().route_to('categorias_index') ?>" class="nav-link">Contact</a>
+        <a href="<?= base_url().route_to('producto_index') ?>" class="nav-link">Productos</a>
       </li>
     </ul>
 
@@ -98,7 +98,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="<?= base_url().route_to('categorias_index') ?>" class="nav-link">
+            <a href="<?= base_url().route_to('producto_index') ?>" class="nav-link">
               <i class="fa-brands fa-product-hunt mr-2 ml-2"></i>
               <p>
                 Productos
