@@ -87,8 +87,8 @@
     <tbody id="mostrar_categorias">
    
     <tr>
-        <td>
-            <h1>Cargando Categorías.....</h1>
+        <td colspan="5">
+            <h1 class="text-center m-3">Cargando Categorías.....</h1>
         </td>
     </tr>
             
